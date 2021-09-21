@@ -1,5 +1,4 @@
 import folium
-import json
 
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
@@ -35,17 +34,18 @@ def show_all_pokemons(request):
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in pokemon_entities:
+        print(pokemon_entity.pokemon.image.path)
         add_pokemon(
             folium_map, pokemon_entity.lat,
             pokemon_entity.lon,
-            request.build_absolute_uri(pokemon_entity.pokemon.image)
+            pokemon_entity.pokemon.image.path
         )
 
     pokemons_on_page = []
     for pokemon in pokemons:
         pokemons_on_page.append({
             'pokemon_id': pokemon.id,
-            'img_url': request.build_absolute_uri(pokemon.image),
+            'img_url': pokemon.image.path,
             'title_ru': pokemon.title,
         })
 
@@ -67,12 +67,12 @@ def show_pokemon(request, pokemon_id):
     add_pokemon(
         folium_map, pokemon_entity.lat,
         pokemon_entity.lon,
-        request.build_absolute_uri(pokemon_entity.pokemon.image)
+        pokemon_entity.pokemon.image.path
     )
 
     pokemon_on_page.append({
         'pokemon_id': pokemon.id,
-        'img_url': request.build_absolute_uri(pokemon.image),
+        'img_url': pokemon.image.path,
         'title_ru': pokemon.title,
         'title_en': pokemon.title_en,
         'title_jp': pokemon.title_jp,
@@ -88,16 +88,16 @@ def show_pokemon(request, pokemon_id):
         pokemon_on_page[0]["previous_evolution"] = {
             "title_ru": pokemon.previous_evolution.title,
             "pokemon_id": pokemon.previous_evolution.id,
-            "img_url": request.build_absolute_uri(
-                           pokemon.previous_evolution.image
-                       ),
+            "img_url": pokemon.previous_evolution.image.path
         }
 
     if pokemon.next_evolution:
         pokemon_on_page[0]["next_evolution"] = {
             "title_ru": pokemon.next_evolution.title,
             "pokemon_id": pokemon.next_evolution.id,
-            "img_url": request.build_absolute_uri(pokemon.next_evolution.image),
+            "img_url": request.build_absolute_uri(
+                pokemon.next_evolution.image.path
+            ),
         }
 
     return render(request, 'pokemon.html', context={
