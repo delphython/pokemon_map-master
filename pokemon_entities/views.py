@@ -39,7 +39,7 @@ def show_all_pokemons(request):
         add_pokemon(
             folium_map, pokemon_entity.lat,
             pokemon_entity.lon,
-            # pokemon_entity.pokemon.image.path
+            pokemon_entity.pokemon.image.path
         )
 
     pokemons_on_page = []
@@ -67,7 +67,7 @@ def show_pokemon(request, pokemon_id):
     add_pokemon(
         folium_map, pokemon_entity.lat,
         pokemon_entity.lon,
-        # pokemon_entity.pokemon.image.path,
+        pokemon_entity.pokemon.image.path,
     )
 
     pokemon_on_page = {
