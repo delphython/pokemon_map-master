@@ -58,10 +58,8 @@ def show_all_pokemons(request):
 
 
 def show_pokemon(request, pokemon_id):
-    pokemon_on_page = []
-
     try:
-        pokemon_entity = PokemonEntity.objects.get(id=pokemon_id+"9")
+        pokemon_entity = PokemonEntity.objects.get(id=pokemon_id)
         pokemon = Pokemon.objects.get(id=pokemon_id)
     except ObjectDoesNotExist:
         raise Http404('Такой покемон не найден')
@@ -73,7 +71,7 @@ def show_pokemon(request, pokemon_id):
         # pokemon_entity.pokemon.image.path
     )
 
-    pokemon_on_page.append({
+    pokemon_on_page = {
         'pokemon_id': pokemon.id,
         'img_url': pokemon.image.path,
         'title_ru': pokemon.title,
@@ -85,17 +83,17 @@ def show_pokemon(request, pokemon_id):
             'lat': pokemon_entity.lat,
             'lon': pokemon_entity.lon,
         }],
-    })
+    }
 
     if pokemon.previous_evolution:
-        pokemon_on_page[0]['previous_evolution'] = {
+        pokemon_on_page['previous_evolution'] = {
             'title_ru': pokemon.previous_evolution.title,
             'pokemon_id': pokemon.previous_evolution.id,
             'img_url': pokemon.previous_evolution.image.path
         }
 
     if pokemon.next_evolution:
-        pokemon_on_page[0]['next_evolution'] = {
+        pokemon_on_page['next_evolution'] = {
             'title_ru': pokemon.next_evolution.title,
             'pokemon_id': pokemon.next_evolution.id,
             'img_url': request.build_absolute_uri(
@@ -104,5 +102,5 @@ def show_pokemon(request, pokemon_id):
         }
 
     return render(request, 'pokemon.html', context={
-        'map': folium_map._repr_html_(), 'pokemon': pokemon_on_page[0]
+        'map': folium_map._repr_html_(), 'pokemon': pokemon_on_page
     })
