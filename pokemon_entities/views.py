@@ -1,5 +1,4 @@
 import folium
-import os
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
@@ -68,7 +67,7 @@ def show_pokemon(request, pokemon_id):
     add_pokemon(
         folium_map, pokemon_entity.lat,
         pokemon_entity.lon,
-        # pokemon_entity.pokemon.image.path
+        # pokemon_entity.pokemon.image.path,
     )
 
     pokemon_on_page = {
@@ -89,16 +88,16 @@ def show_pokemon(request, pokemon_id):
         pokemon_on_page['previous_evolution'] = {
             'title_ru': pokemon.previous_evolution.title,
             'pokemon_id': pokemon.previous_evolution.id,
-            'img_url': pokemon.previous_evolution.image.path
+            'img_url': pokemon.previous_evolution.image.path,
         }
 
-    if pokemon.next_evolution:
+    next_evolution = pokemon.next_evolution.all().first()
+
+    if next_evolution:
         pokemon_on_page['next_evolution'] = {
-            'title_ru': pokemon.next_evolution.title,
-            'pokemon_id': pokemon.next_evolution.id,
-            'img_url': request.build_absolute_uri(
-                pokemon.next_evolution.image.path
-            ),
+            'title_ru': next_evolution.title,
+            'pokemon_id': next_evolution.id,
+            'img_url': next_evolution.image.path,
         }
 
     return render(request, 'pokemon.html', context={
