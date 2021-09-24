@@ -59,7 +59,7 @@ def show_all_pokemons(request):
 def show_pokemon(request, pokemon_id):
     try:
         pokemon = Pokemon.objects.get(id=pokemon_id)
-        pokemon_entity = pokemon.pokemon_entities.get()
+        pokemon_entity = pokemon.pokemon_entities.all().first()
     except ObjectDoesNotExist:
         raise Http404('Такой покемон не найден')
 
